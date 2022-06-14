@@ -2,7 +2,7 @@ version: '3'
 
 services:
   cloud-weather-postgres:
-    image: debezium/postgres:13-alpine
+    image: 'postgres:latest'
     environment:
       - POSTGRES_DATABASE=cloud_weather_dev
       - POSTGRES_USER=cloud_weather_dev
@@ -10,7 +10,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - postgres-data:/data/db
+      - ./postgres-data/:/data/db
 
 volumes:
   postgres-data:

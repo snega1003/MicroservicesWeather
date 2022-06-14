@@ -18,7 +18,8 @@ var app = builder.Build();
 
 app.MapGet(
   "/observation/{zip}",
-  async (string zip, [FromQuery] int? days, PrecipDbContext db) => {
+  async (string zip, [FromQuery] int? days, PrecipDbContext db) =>
+  {
     if (days == null || days < 1 || days > 30)
     {
       return Results.BadRequest("Please provide a 'days' query parameter between 1 and 30");
@@ -29,6 +30,15 @@ app.MapGet(
     .ToListAsync();
 
     return Results.Ok(results);
-});
+  });
+
+app.MapPost(
+  "/observation",
+  async (Precipitation precip, PrecipDbContext db) =>
+  {
+    precip.CreatedOn = precip.CreatedOn.ToUniversalTime();
+    await db.AddAsync(precip);
+    await db.SaveChangesAsync(); //EF requires: to actualy save the changes
+  });
 
 app.Run();
